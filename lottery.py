@@ -195,19 +195,4 @@ while(total_accepted() < 2*section_limit and entries):
         print "Can't assign! Only available for full section"
 
 
-print_lottery_result()            
-            
-
-
-    
-    
-
-
-
-
-
-
-        
-
-
-         
+print_lottery_result()
