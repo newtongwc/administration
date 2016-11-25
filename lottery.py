@@ -52,37 +52,44 @@ FLAGS = vars(args)
 section_limit = FLAGS['section_limit']
 
 # response_filename = '/Users/drm/Downloads/Lottery sample input - Sheet1.csv'
-#response_filename = '/Users/drm/Downloads/Newton Girls Who Code Club 2016-2017 Registration (Responses) - Form Responses 1.csv'
+# response_filename = '/Users/drm/Downloads/Newton Girls Who Code Club 2016-2017 Registration (Responses) - Form Responses 1.csv'
 response_filename = FLAGS['response_filename']
 csv_file = open(response_filename, 'rb')
 reader = csv.DictReader(csv_file)
+
 
 # Simple accessor methods for lottery entries
 def first_name(entry):
     return entry["Child's first name"]
 
+
 def last_name(entry):
     return entry["Child's last name"]
+
 
 def available_tuesday(entry):
     response = entry["Which sections are you entering the lottery for (you'll be assigned to at most one)?"]
     return 'T' in response
 
+
 def available_friday(entry):
     response = entry["Which sections are you entering the lottery for (you'll be assigned to at most one)?"]
     return 'F' in response
 
+
 def returning_student(entry):
     response = entry["Are you a returning Newton GWC Club member?"]
-    return response == 'Yes' 
+    return response == 'Yes'
+
 
 def available_both_days(entry):
     return available_tuesday(entry) and available_friday(entry)
 
+
 entries = []
 for entry in reader:
     if ((returning_student(entry) and FLAGS['returning']) or
-        (not returning_student(entry) and FLAGS['firsttime'])):
+            (not returning_student(entry) and FLAGS['firsttime'])):
         entries.append(entry)
 
 if FLAGS['seed']:
@@ -93,6 +100,7 @@ accepted_tuesday = []
 accepted_friday = []
 accepted_flexible = []
 drawn_after_full = []
+
 
 def section_open(accepted_list):
     return len(accepted_list) < section_limit
@@ -117,7 +125,7 @@ def print_lottery_result():
     print_entry_list(accepted_tuesday)
 
     print "\nAccepted Friday (%d): " % len(accepted_friday)
-    print_entry_list(accepted_friday) 
+    print_entry_list(accepted_friday)
 
     print "\nAccepted flexible (%d): " % len(accepted_flexible)
     print_entry_list(accepted_flexible)
@@ -125,12 +133,14 @@ def print_lottery_result():
     print "\nDrawn after full (%d): " % len(drawn_after_full)
     print_entry_list(drawn_after_full)
 
-    print "\nNever drawn (%d): "% len(entries)
+    print "\nNever drawn (%d): " % len(entries)
     print_entry_list(entries)
+
 
 # Phase 1 -- put entrants in their sole-available section, or accept them but be flexible if they are.
 print "\nStarting Phase 1"
-while(section_open(accepted_tuesday) and section_open(accepted_friday) and total_accepted() < 2*section_limit and entries):
+while (section_open(accepted_tuesday) and section_open(
+        accepted_friday) and total_accepted() < 2 * section_limit and entries):
     entry = entries.pop()
     print "\nDrew entry: %s" % to_string(entry)
     if available_both_days(entry):
@@ -149,7 +159,7 @@ while(section_open(accepted_tuesday) and section_open(accepted_friday) and total
 # individually over-subscribed, print the three lists to allow Newton
 # GWC Staff to distribute the flexible students to make a good balance
 # of ages in each section. We're done.
-if total_accepted() == 2*section_limit or not entries:
+if total_accepted() == 2 * section_limit or not entries:
     print_lottery_result()
     sys.exit()
 
@@ -174,7 +184,7 @@ else:
 
 # Phase 3 fill it out remaining section with additional draws from the pool.
 print "\nStarting Phase 3"
-while(total_accepted() < 2*section_limit and entries):
+while total_accepted() < 2 * section_limit and entries:
     entry = entries.pop()
     print "\nDrew entry: %s" % to_string(entry)
     if available_both_days(entry):
@@ -195,6 +205,5 @@ while(total_accepted() < 2*section_limit and entries):
     else:
         drawn_after_full.append(entry)
         print "Can't assign! Only available for full section"
-
 
 print_lottery_result()
