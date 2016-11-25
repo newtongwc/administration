@@ -29,6 +29,8 @@
 # testing) or can be taken from the system.
 #
 # Usage: lottery.py --section_limit N [--returning | --firsttime] --seed R --response_filename <filename>
+#
+# Author: David Miller, 2016
 
 import csv
 import random
